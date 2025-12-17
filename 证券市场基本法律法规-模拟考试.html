@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>模拟考试 - 证券市场基本法律法规（浅色+严格模式+计时+错题+抽题）</title>
+  <style>
+    :root{
+      --bg:#f6f8fc;
+      --panel:#ffffff;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:rgba(17,24,39,.12);
+      --accent:#2563eb;
+      --accent2:#1d4ed8;
+      --good:#059669;
+      --bad:#e11d48;
+      --warn:#d97706;
+      --shadow:0 10px 30px rgba(17,24,39,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      padding:16px 16px;
+      border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,.85);
+      backdrop-filter: blur(8px);
+      position:sticky;top:0;z-index:10
+    }
+    h1{margin:0;font-size:16px;font-weight:700;line-height:1.35}
+    .sub{margin-top:6px;color:var(--muted);font-size:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .wrap{max-width:1180px;margin:0 auto;padding:14px;display:grid;grid-template-columns: 1fr 330px;gap:14px}
+    @media (max-width: 980px){.wrap{grid-template-columns:1fr}.right{order:-1}}
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .panel .hd{
+      padding:12px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .panel .bd{padding:12px}
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn:hover{border-color:rgba(37,99,235,.45);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+    .btn.primary{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.45);color:var(--accent2)}
+    .btn.danger{background:rgba(225,29,72,.10);border-color:rgba(225,29,72,.35);color:var(--bad)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted)}
+    .badge{
+      padding:4px 8px;border-radius:999px;border:1px solid var(--border);
+      background:rgba(17,24,39,.02); color:var(--muted)
+    }
+    .badge strong{color:var(--text)}
+    .q-title{font-size:14px;font-weight:700;margin:0 0 10px;line-height:1.45}
+    .q-type{font-size:12px;color:var(--muted);margin:6px 0 0}
+    .opt{
+      display:flex;gap:10px;align-items:flex-start;
+      padding:10px;border:1px solid var(--border);
+      border-radius:12px;margin:8px 0;background:#fff;
+    }
+    .opt:hover{border-color:rgba(37,99,235,.35)}
+    .opt input{margin-top:2px}
+    .opt .txt{font-size:13px;line-height:1.45}
+    .nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .grid{display:grid;grid-template-columns: repeat(10, 1fr);gap:6px}
+    @media (max-width: 980px){.grid{grid-template-columns: repeat(12, 1fr)}}
+    .cell{
+      padding:7px 0;text-align:center;border-radius:10px;border:1px solid var(--border);
+      font-size:12px;cursor:pointer;background:#fff;color:var(--muted);user-select:none
+    }
+    .cell.cur{outline:2px solid rgba(37,99,235,.45);color:var(--text)}
+    .cell.done{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.35);color:var(--text)}
+    .cell.wrong{background:rgba(225,29,72,.08);border-color:rgba(225,29,72,.30);color:var(--text)}
+    .cell.part{background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.30);color:var(--text)}
+    .foot{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:10px}
+    .muted{color:var(--muted);font-size:12px}
+    dialog{
+      border:none;border-radius:14px;max-width:740px;width:calc(100% - 28px);
+      background:#fff;color:var(--text);border:1px solid var(--border);box-shadow:var(--shadow)
+    }
+    dialog::backdrop{background:rgba(0,0,0,.35)}
+    .dlg-hd{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .dlg-bd{padding:12px}
+    pre{white-space:pre-wrap;word-break:break-word;background:rgba(17,24,39,.03);padding:10px;border-radius:12px;border:1px solid var(--border);margin:10px 0 0}
+    .tiny{font-size:12px;color:var(--muted)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .switch{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#fff
+    }
+    .switch input{transform: translateY(1px);}
+    .field{
+      display:flex;gap:8px;align-items:center;
+      padding:6px 8px;border:1px solid var(--border);border-radius:12px;background:#fff
+    }
+    .field input,.field select{
+      border:1px solid var(--border);border-radius:10px;padding:6px 8px;outline:none;
+    }
+    .field input:focus,.field select:focus{border-color:rgba(37,99,235,.45);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+  </style>
+</head>
+<body>
+<header>
+  <h1 id="examTitle">模拟考试</h1>
+  <div class="sub">
+    <span class="badge">模式：<strong id="modeBadge">全量题库</strong></span>
+    <span class="badge">严格模式：<strong id="strictBadge">关</strong></span>
+    <span class="badge">计时：<strong id="timerBadge">未开始</strong></span>
+    <span class="badge">进度：<strong id="progressBadge">0 / 0</strong></span>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="hd">
+      <div style="min-width:240px">
+        <div class="meta">
+          <span class="badge" id="qIndexBadge">第 - 题</span>
+          <span class="badge" id="qTypeBadge">题型：-</span>
+          <span class="badge" id="qStatusBadge">状态：-</span>
+        </div>
+        <div class="tiny" style="margin-top:8px" id="ruleHint"></div>
+      </div>
+
+      <div class="nav">
+        <button class="btn" id="prevBtn">上一题</button>
+        <button class="btn" id="nextBtn">下一题</button>
+        <button class="btn primary" id="submitBtn">提交本题</button>
+        <button class="btn danger" id="finishBtn">交卷统计</button>
+      </div>
+    </div>
+
+    <div class="bd">
+      <div class="q-title" id="qTitle"></div>
+      <div class="q-type" id="qStem"></div>
+      <div id="options"></div>
+      <div class="foot">
+        <div class="muted" id="hint">提示：多选/不定项可多选；判断题选“对/错”。</div>
+        <div class="muted" id="saveHint"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel right">
+    <div class="hd">
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+        <div style="font-weight:700">控制台</div>
+        <div class="row">
+          <label class="switch" title="开启后：不显示即时解析，需交卷后统一判分">
+            <input type="checkbox" id="strictToggle" />
+            <span>严格考试模式</span>
+          </label>
+          <button class="btn" id="startBtn">开始考试</button>
+        </div>
+        <div class="row">
+          <div class="field" title="倒计时分钟数；0 表示不启用倒计时（只计时）">
+            <span class="tiny">倒计时(分)</span>
+            <input id="countdownMin" type="number" min="0" step="1" value="0" style="width:80px" />
+          </div>
+          <button class="btn" id="pauseBtn" disabled>暂停</button>
+          <button class="btn" id="resumeBtn" disabled>继续</button>
+        </div>
+        <div class="row">
+          <button class="btn" id="wrongOnlyBtn" title="基于最近一次交卷的错题生成练习">只做错题</button>
+          <button class="btn" id="allModeBtn">回到全量</button>
+        </div>
+        <div class="row">
+          <div class="field">
+            <span class="tiny">随机抽题</span>
+            <input id="sampleN" type="number" min="1" step="1" value="50" style="width:90px" />
+            <label class="tiny" style="display:flex;gap:6px;align-items:center">
+              <input type="checkbox" id="balancedSample" />
+              按题型均衡
+            </label>
+          </div>
+          <button class="btn" id="sampleBtn">抽题</button>
+        </div>
+      </div>
+      <button class="btn" id="resetBtn">清空重做</button>
+    </div>
+
+    <div class="bd">
+      <div class="grid" id="grid"></div>
+      <div style="height:10px"></div>
+      <div class="meta">
+        <span class="badge">已选择：<strong id="pickedCount">0</strong></span>
+        <span class="badge">已提交：<strong id="submittedCount">0</strong></span>
+        <span class="badge">错题：<strong id="wrongCount">0</strong></span>
+      </div>
+      <div class="tiny" style="margin-top:10px">
+        颜色：绿色=已判对 / 红色=已判错 / 黄色=已选未判分
+      </div>
+    </div>
+  </aside>
+</div>
+
+<dialog id="dlg">
+  <div class="dlg-hd">
+    <div style="font-weight:700" id="dlgTitle">提示</div>
+    <button class="btn" id="dlgClose">关闭</button>
+  </div>
+  <div class="dlg-bd" id="dlgBody"></div>
+</dialog>
+
+<dialog id="finalDlg">
+  <div class="dlg-hd">
+    <div style="font-weight:700">交卷统计</div>
+    <button class="btn" id="finalClose">关闭</button>
+  </div>
+  <div class="dlg-bd" id="finalBody"></div>
+</dialog>
+
+<script>
+// ======================= 题库数据（1~120） =======================
+// 为节省篇幅，这里直接复用你上一版我给的 EXAM.questions（1~120）
+// ——请保持不变：我已在下方粘贴完整题库。
+const EXAM = { title:"2025年证券从业资格《证券市场基本法律法规》黄金押题卷一", questions: [] };
+
+// --- 从上一版粘贴：开始 ---
+EXAM.questions = (function(){
+  const qs = [
+    {id:1,type:"single",section:"单项选择题",title:"A公司的法定代表人为张某，2023年1月1日法定代表人变为李某，则A公司应当办理的是（　）。",options:{A:"设立登记",B:"变更登记",C:"停业登记",D:"注销登记"},answer:["B"],analysis:"《公司法》第7条：营业执照记载事项变更的，公司应当依法办理变更登记。"},
+    {id:2,type:"single",section:"单项选择题",title:"下列不符合内幕交易禁止性规定的是（　）。",options:{A:"内幕交易行为给投资者造成损失的，行为人应当依法承担赔偿责任",B:"禁止证券交易内幕信息的知情人和非法获取内幕信息的人利用内幕信息从事证券交易活动",C:"证券交易内幕信息的知情人和非法获取内幕信息的人，在内幕信息公开前，不得买卖该公司的证券",D:"证券交易内幕信息的知情人和非法获取内幕信息的人，可以私人的身份建议他人买卖该证券"},answer:["D"],analysis:"内幕信息公开前不得交易、泄露或建议他人交易。D项违反禁止性规定。"},
+    {id:3,type:"single",section:"单项选择题",title:"根据《证券公司监督管理条例》，净资产低于实收资本50%的公司，不得成为持有证券公司（　）以上股权的股东。",options:{A:"5%",B:"3%",C:"30%",D:"50%"},answer:["A"],analysis:"条例第十条：净资产低于实收资本50%的，不得成为持有证券公司5%以上股权股东/实际控制人。"},
+    {id:4,type:"single",section:"单项选择题",title:"按照《证券公司合规管理实施指引》的要求，以下关于合规部门的说法错误的是（　）。",options:{A:"合规部门对合规负责人负责",B:"合规部门不得承担与合规管理相冲突的其他职责",C:"应当将合规部门与稽核、风控、内审、法务等部门区分",D:"具备3年以上相关经历的合规管理人员不得低于总部人数1.5%，且不得少于3人"},answer:["D"],analysis:"应当“不得少于5人”，不是3人。"},
+    {id:5,type:"single",section:"单项选择题",title:"证券投资顾问一般服务于（　）；证券研究报告一般服务于（　）等专业投资者。",options:{A:"个人投资者；基金、QFII",B:"合格投资者；基金、QFII",C:"普通投资者；合格投资者",D:"普通投资者；基金、QFII"},answer:["D"],analysis:"投资顾问面向普通投资者；研究报告面向基金、QFII等专业投资者。"},
+    {id:6,type:"single",section:"单项选择题",title:"对证券交易所作出的不予上市交易、终止上市交易决定不服的，可以向（　）申请复核。",options:{A:"证监会",B:"发改委",C:"证券交易所",D:"证券交易所设立的复核机构"},answer:["D"],analysis:"可向交易所设立的复核机构申请复核。"},
+    {id:7,type:"single",section:"单项选择题",title:"证券发行、交易活动的当事人具有平等的法律地位，其行为准则不包括（　）。",options:{A:"自愿",B:"有偿",C:"无偿",D:"诚实信用"},answer:["C"],analysis:"应遵循自愿、有偿、诚实信用。"},
+    {id:8,type:"single",section:"单项选择题",title:"下列关于私募基金的表述，说法错误的是（　）。",options:{A:"登记材料不完备应按协会要求补正",B:"备案材料齐备后15个工作日内办结备案",C:"基金管理人应按协会规定申请登记并报送基本情况",D:"经备案的私募基金可以申请开立证券相关账户"},answer:["B"],analysis:"应为20个工作日内办结备案并公告。"},
+    {id:9,type:"single",section:"单项选择题",title:"证券评级机构人员与相关方发生累计超过（　）万元的交易，应当回避。",options:{A:"20",B:"30",C:"50",D:"80"},answer:["C"],analysis:"超过50万元交易应回避。"},
+    {id:10,type:"single",section:"单项选择题",title:"下列关于操纵证券期货市场罪的说法，正确的是（　）。",options:{A:"主观方面为过失",B:"侵害国家证券期货管理制度和投资者合法权益",C:"不处罚单位",D:"单位不能成为犯罪主体"},answer:["B"],analysis:"单位也可构成本罪；侵害管理制度与投资者权益。"},
+    {id:11,type:"single",section:"单项选择题",title:"下列关于资产管理计划投资者应履行义务的说法中，错误的是（　）。",options:{A:"对于集合资产管理计划按合同约定参与、退出和转让份额",B:"配合适当性、涉税尽调、反洗钱等工作",C:"认真阅读并签署风险揭示书",D:"承担合同约定的管理费、业绩报酬（如有）、托管费等合理费用"},answer:["A"],analysis:"A属于投资者权利；B/C/D为义务。"},
+    {id:12,type:"single",section:"单项选择题",title:"证券自营业务原始凭证等材料至少妥善保存（　）年。",options:{A:"10",B:"20",C:"5",D:"15"},answer:["B"],analysis:"自营业务资料至少保存20年。"},
+    {id:13,type:"single",section:"单项选择题",title:"根据《区域性股权市场自律管理与服务规范（试行）》，下列说法正确的是（　）。",options:{A:"证券公司违规由证监会采取自律惩戒",B:"运营机构违规由中证协采取行政监管",C:"运营机构违规由中证协采取自律惩戒",D:"证券公司违规由中证协采取行政监管"},answer:["C"],analysis:"运营机构违规由中国证券业协会采取自律惩戒。"},
+    {id:14,type:"single",section:"单项选择题",title:"从事证券自营业务的证券公司注册资本最低限额应达到（　）人民币。",options:{A:"5000万元",B:"2亿元",C:"1亿5000万元",D:"1亿元"},answer:["D"],analysis:"经营证券自营等之一，注册资本最低1亿元。"},
+    {id:15,type:"single",section:"单项选择题",title:"有限责任公司区别于合伙制企业的特点之一是（　）。",options:{A:"有独立的名称",B:"以营利为目的",C:"具有法人资格",D:"独立开展生产经营活动"},answer:["C"],analysis:"公司具法人资格；合伙企业非法人。"},
+    {id:16,type:"single",section:"单项选择题",title:"证券公司的股东和实际控制人的下列行为，未违反《证券公司监督管理条例》规定的是（　）。",options:{A:"通过关联交易侵占证券公司资产",B:"通过内幕交易占用客户资产",C:"直接挪用客户资产",D:"按出资比例行使股东（大）会表决权"},answer:["D"],analysis:"D属正常股东权利；其余均违法违规。"},
+    {id:17,type:"single",section:"单项选择题",title:"关于分级资产管理产品的表述，下列说法错误的是（　）。",options:{A:"公募产品和开放式私募产品不得份额分级",B:"分级比例应与投资资产风险相适应",C:"固定收益≤3:1，权益≤2:1，商品及衍生品/混合≤1:1",D:"发行分级产品应自主管理，不得转委托给劣后级投资者"},answer:["C"],analysis:"权益类≤1:1；商品及衍生品/混合≤2:1。"},
+    {id:18,type:"single",section:"单项选择题",title:"下列不属于资产管理计划可直接投资资产的是（　）。",options:{A:"商业银行信贷资产",B:"同业存单",C:"非金融企业债务融资工具",D:"比照公募基金管理的资产管理产品"},answer:["A"],analysis:"不得直接投资商业银行信贷资产。"},
+    {id:19,type:"single",section:"单项选择题",title:"下列属于操纵证券市场行为的是（　）。",options:{A:"将自营账户借给他人使用",B:"与他人串通按约定时间价格方式相互交易影响价格",C:"委托其他证券公司代为买卖证券",D:"内幕人员利用内幕信息交易或建议他人交易"},answer:["B"],analysis:"B属于《证券法》列举的操纵市场手段之一。"},
+    {id:20,type:"single",section:"单项选择题",title:"证券公司开展私募资产管理业务，应具备符合条件的高级管理人员和（　）名以上投资经理。",options:{A:"3",B:"4",C:"5",D:"6"},answer:["A"],analysis:"需3名以上投资经理。"},
+    {id:21,type:"single",section:"单项选择题",title:"保荐代表人在2个自然年度内被采取监管措施累计2次以上，证监会可（　）个月内不受理其具体负责的推荐。",options:{A:"3",B:"6",C:"9",D:"12"},answer:["B"],analysis:"可6个月内不受理。"},
+    {id:22,type:"single",section:"单项选择题",title:"证券公司经营经纪业务同时经营承销保荐/自营/资管等之一的，净资本不得低于人民币（　）。",options:{A:"2000万元",B:"5000万元",C:"1亿元",D:"2亿元"},answer:["C"],analysis:"净资本不得低于1亿元。"},
+    {id:23,type:"single",section:"单项选择题",title:"联合保荐方式中参与联合保荐的保荐机构不得超过（　）家。",options:{A:"2",B:"3",C:"10",D:"5"},answer:["A"],analysis:"联合保荐不得超过2家。"},
+    {id:24,type:"single",section:"单项选择题",title:"证券公司应当自每月结束之日起（　）个工作日内，报送月度报告。",options:{A:"3",B:"5",C:"7",D:"10"},answer:["C"],analysis:"每月结束后7个工作日内报送。"},
+    {id:25,type:"single",section:"单项选择题",title:"下列有关法律主体的说法，错误的是（　）。",options:{A:"在我国境内的外国人和无国籍人不属于法律主体",B:"国家可以作为国家所有权法律关系、刑事法律关系的主体",C:"非营利性法人或非法人组织属于法律主体",D:"在国际上，国家是与国际法有关的法律关系的主体"},answer:["A"],analysis:"在我国境内的外国人和无国籍人也可成为法律主体。"},
+    {id:26,type:"single",section:"单项选择题",title:"不具备（　）的证券公司，其自有资金只能以套期保值为目的参与国债期货交易。",options:{A:"证券自营资格",B:"证券管理资格",C:"经纪业务资格",D:"承销资格"},answer:["A"],analysis:"不具备自营资格只能以对冲风险目的参与衍生品交易。"},
+    {id:27,type:"single",section:"单项选择题",title:"根据《证券投资基金法》，公开募集基金的基金管理人不得（　）。",options:{A:"为基金份额持有人的利益进行证券投资",B:"向基金份额持有人进行信息披露",C:"向基金份额持有人进行收益分配",D:"向基金份额持有人违规承诺收益或者承担损失"},answer:["D"],analysis:"不得违规承诺收益或承担损失。"},
+    {id:28,type:"single",section:"单项选择题",title:"关于普通合伙企业的债务清偿，以下说法错误的是（　）。",options:{A:"不能清偿到期债务的，合伙人承担无限连带责任",B:"强制执行合伙人财产份额时通知全体合伙人，但其他合伙人没有优先购买权",C:"清偿超过亏损分担比例的，有权向其他合伙人追偿",D:"自有财产不足清偿个人债务的，可用从合伙企业分取收益清偿"},answer:["B"],analysis:"其他合伙人享有优先购买权。"},
+    {id:29,type:"single",section:"单项选择题",title:"我国于（　）年在上交所设立科创板并试点注册制。",options:{A:"2017",B:"2018",C:"2019",D:"2020"},answer:["C"],analysis:"2019年设立科创板并试点注册制。"},
+    {id:30,type:"single",section:"单项选择题",title:"证券公司等不得担任财务顾问的情形是（　）。",options:{A:"最近36个月内存在违反诚信不良记录",B:"最近36个月内因执业违反行业规范受自律处分",C:"最近36个月内因违法违规经营受处罚或正被调查",D:"曾依据办法从事并购重组财务顾问业务"},answer:["C"],analysis:"36个月内因违法违规经营受处罚或被调查不得担任。"},
+    {id:31,type:"single",section:"单项选择题",title:"托管机构挪用托管客户金融债券，违法所得55万元，央行应采取（　）。",options:{A:"处50万-200万罚款",B:"处5万-50万罚款",C:"没收违法所得，并处1-5倍罚款",D:"没收违法所得，并处1-3倍罚款"},answer:["C"],analysis:"违法所得50万元以上：没收并处1-5倍罚款。"},
+    {id:32,type:"single",section:"单项选择题",title:"内地机构使用港股投资顾问服务过程中，不符合规范的是（　）。",options:{A:"委托香港机构直接执行投资指令",B:"与香港机构签订协议",C:"招募说明书如实披露使用情况",D:"实行留痕管理"},answer:["A"],analysis:"应自主决策，不得委托香港机构直接执行投资指令。"},
+    {id:33,type:"single",section:"单项选择题",title:"关于公司设立方式说法正确的是（　）。",options:{A:"发起设立适用于有限责任公司、股份有限公司和合伙企业",B:"募集设立适用于有限责任公司和股份有限公司",C:"募集设立时全部股份均向社会公开募集",D:"发起设立时由发起人认购公司应发行的全部股份"},answer:["D"],analysis:"募集设立仅适用于股份公司；发起设立发起人认购全部股份。"},
+    {id:34,type:"single",section:"单项选择题",title:"关于违规披露/不披露重要信息行政责任，理解错误的是（　）。",options:{A:"未按规定披露信息，对直接负责主管人员警告并处20万-200万罚款",B:"报告虚假记载等：责令改正警告并处100万-1000万罚款",C:"收购人未履行公告/要约义务：警告并处10万-30万罚款",D:"收购人未履行义务：对直接责任人员警告并处20万-200万罚款"},answer:["C"],analysis:"应为处50万-500万罚款。"},
+    {id:35,type:"single",section:"单项选择题",title:"投资者坚持购买高于其风险承受能力产品（非最低风险承受类别）时，业务人员应（　）。",options:{A:"特别书面风险示警后仍坚持的，可销售/提供服务",B:"拒绝销售/提供服务",C:"直接销售/提供服务",D:"不予理睬"},answer:["A"],analysis:"应书面特别风险警示，仍坚持可销售。"},
+    {id:36,type:"single",section:"单项选择题",title:"财务顾问并购重组工作档案和底稿保存期不少于（　）年。",options:{A:"20",B:"15",C:"10",D:"5"},answer:["C"],analysis:"不少于10年。"},
+    {id:37,type:"single",section:"单项选择题",title:"资产管理产品按募集方式不同，可分为（　）。",options:{A:"公募产品和私募产品",B:"集合理财计划",C:"固定收益类产品",D:"权益类产品"},answer:["A"],analysis:"按募集方式：公募/私募。"},
+    {id:38,type:"single",section:"单项选择题",title:"公司营业执照签发日期为（　）。",options:{A:"公司成立日",B:"董事会报送登记申请日",C:"公司开始营业日",D:"发起人认足股份日"},answer:["A"],analysis:"营业执照签发日为公司成立日期。"},
+    {id:39,type:"single",section:"单项选择题",title:"净资本等指标不符合标准，未按时报送整改计划的，派出机构应当（　）。",options:{A:"督促加快整改",B:"立即限制业务活动",C:"延长整改期限",D:"不予理睬"},answer:["B"],analysis:"未按时报送整改计划，应立即限制业务活动。"},
+    {id:40,type:"single",section:"单项选择题",title:"关于证券公司代销金融产品，说法错误的是（　）。",options:{A:"应审慎选择并充分了解产品信息",B:"禁止分支机构擅自代销",C:"客户资金可直接向委托人支付或通过证券公司支付",D:"委托人限定购买人范围的，为委托人利益可超范围销售"},answer:["D"],analysis:"不得超出委托人确定的购买人范围销售。"},
+    {id:41,type:"multi",section:"多项选择题",title:"证券公司自营业务部门的职责不包括（　）。",options:{A:"自营账户开户",B:"自营账户使用登记",C:"自营账户销户",D:"自营业务所需资金的调度"},answer:["A","B","C","D"],analysis:"上述均应由非自营业务部门负责，自营部门不包括这些职责。"},
+    {id:42,type:"multi",section:"多项选择题",title:"下列有关法律关系的描述，正确的是（　）。",options:{A:"人与人之间的关系都是法律关系",B:"任何一种法律关系均以特定的法律规范为依据",C:"社会关系只有经过法律规范确认或认可才上升为法律关系",D:"没有相应法律规定，就不受法律规范约束"},answer:["B","C","D"],analysis:"A错误：并非所有人际关系都是法律关系。"},
+    {id:43,type:"multi",section:"多项选择题",title:"关于证券公司治理基本要求，下列说法正确的有（　）。",options:{A:"证券公司对客户负有尽责义务",B:"证券公司不得损害客户合法权益",C:"证券公司不得挪用客户托管在公司的证券",D:"证券公司不得侵犯客户的财产权、选择权"},answer:["B","C","D"],analysis:"应为诚信义务；A表述不准确。"},
+    {id:44,type:"multi",section:"多项选择题",title:"设立股份有限公司公开发行股票，报送募股申请和（　）。",options:{A:"公司章程",B:"招股说明书",C:"承销机构名称",D:"营业执照"},answer:["A","B","C"],analysis:"还包括发起人协议等；不包括营业执照。"},
+    {id:45,type:"multi",section:"多项选择题",title:"基金合同当事人包括（　）。",options:{A:"基金监管者",B:"基金托管人",C:"基金管理人",D:"基金份额持有人"},answer:["B","C","D"],analysis:"基金合同当事人：持有人、管理人、托管人。"},
+    {id:46,type:"multi",section:"多项选择题",title:"证券公司开展业务内部控制说法正确的有（　）。",options:{A:"受托投资管理业务与自营严格分离",B:"受托投资管理合同不得承诺收益",C:"建立客户回访机制并由专人独立实施",D:"投顾服务费由投顾个人账户收取"},answer:["A","B","C"],analysis:"服务费应以公司账户收取。"},
+    {id:47,type:"multi",section:"多项选择题",title:"证券公司的合规，是指经营管理和执业行为符合（　）。",options:{A:"法律法规规章及规范性文件",B:"行业规范和自律规则",C:"公司内部规章制度",D:"行业普遍遵守的职业道德和行为准则"},answer:["A","B","C","D"],analysis:"合规涵盖法律、自律、内控制度与职业道德等。"},
+    {id:48,type:"multi",section:"多项选择题",title:"证券公司报送柜台市场业务年度报告内容包括（　）。",options:{A:"登记结算",B:"柜台市场业务总体情况",C:"投资者适当性管理",D:"风险与合规管理"},answer:["A","B","C","D"],analysis:"年度报告包括总体情况、交易、登记结算、适当性、风险合规等。"},
+    {id:49,type:"multi",section:"多项选择题",title:"下列（　）转让本公司股份不得违反持有期限、卖出时间数量方式、披露等规定。",options:{A:"上市公司持有10%以上股份的股东",B:"实际控制人、董事、监事、高级管理人员",C:"其他持有发行人首发前发行的股份",D:"上市公司向特定对象发行的股份的股东"},answer:["B","C","D"],analysis:"适用对象为持股5%以上股东及B/C/D等；A表述不符。"},
+    {id:50,type:"multi",section:"多项选择题",title:"退伙的情形包括（　）。",options:{A:"法定退伙",B:"除名退伙",C:"事实退伙",D:"自愿退伙"},answer:["A","B","D"],analysis:"实践中包括自愿、法定、除名退伙。"},
+    {id:51,type:"multi",section:"多项选择题",title:"基金份额持有人权利包括（　）。",options:{A:"分享基金投资收益",B:"确定基金收益分配方案",C:"查阅公开披露的基金信息资料",D:"按规定要求召开基金份额持有人大会"},answer:["A","C","D"],analysis:"收益分配方案由管理人拟定并按程序；B不属持有人直接权利。"},
+    {id:52,type:"multi",section:"多项选择题",title:"股票应当载明的事项包括（　）。",options:{A:"公司名称",B:"股票种类、票面金额及代表的股份数",C:"股票编号",D:"公司成立日期"},answer:["A","B","C","D"],analysis:"均为股票应载明事项。"},
+    {id:53,type:"multi",section:"多项选择题",title:"证券公司违反规定委托他人代为买卖证券的处理，正确的有（　）。",options:{A:"对直接责任人员警告并处3万-10万罚款",B:"无违法所得或不足10万的，处10万-30万罚款",C:"没收违法所得，并处1-5倍罚款",D:"责令改正，处1万-10万罚款"},answer:["A","B","C"],analysis:"D的罚款区间不符。"},
+    {id:54,type:"multi",section:"多项选择题",title:"柜台市场发行、销售与转让产品可以采取（　）方式。",options:{A:"拍卖竞价",B:"集中竞价",C:"标购竞价",D:"报价"},answer:["A","C","D"],analysis:"不得采用集中竞价（除非另有规定）。"},
+    {id:55,type:"multi",section:"多项选择题",title:"风险控制指标无法达标且严重危害市场秩序时，证监会可采取（　）。",options:{A:"责令停业整顿",B:"指定其他机构托管、接管",C:"撤销经营证券业务许可",D:"限制相关证券账户交易"},answer:["A","B","C"],analysis:"主要措施包括停业整顿、托管接管、撤销许可等。"},
+    {id:56,type:"multi",section:"多项选择题",title:"以下情况通过营业网点向普通投资者告知警示应全过程录音录像的有（　）。",options:{A:"普通投资者申请转为专业投资者",B:"向普通投资者销售高风险产品或提供服务",C:"经营机构主动调整分类/分级/匹配意见",D:"向普通投资者履行信息告知义务"},answer:["A","B","C","D"],analysis:"四种情形均需录音录像留痕。"},
+    {id:57,type:"multi",section:"多项选择题",title:"关于科创板证券出借业务规则，正确的是（　）。",options:{A:"战略投资者可作为出借人",B:"约定申报出借期限可在1-182天协商",C:"标的范围与可融券卖出范围不同",D:"交易所对约定申报实时撮合并实时调整余额"},answer:["A","B","D"],analysis:"标的范围与可融券卖出科创板标的一致，C错。"},
+    {id:58,type:"multi",section:"多项选择题",title:"设立证券公司应当具备（　）条件并经批准。",options:{A:"符合法律法规的公司章程",B:"符合规定的注册资本",C:"完善的风险管理与内控制度",D:"合格的经营场所、设施和信息系统"},answer:["A","B","C","D"],analysis:"均为《证券法》第一百一十八条规定条件。"},
+    {id:59,type:"multi",section:"多项选择题",title:"证券公司从事自营业务时（　）属于禁止性行为。",options:{A:"内幕交易",B:"操纵市场",C:"假借他人或个人名义进行自营",D:"违规委托他人代为买卖证券"},answer:["A","B","C","D"],analysis:"均为自营业务禁止性行为。"},
+    {id:60,type:"multi",section:"多项选择题",title:"关于合伙企业清算规则，正确的有（　）。",options:{A:"清算人10日内通知债权人，30日内公告",B:"清算人10日内通知债权人，60日内公告",C:"债权人接通知30日内，未接通知自公告60日内申报",D:"债权人接通知30日内，未接通知自公告45日内申报"},answer:["B","D"],analysis:"通知10日；公告60日；申报：通知30日，公告45日。"},
+    {id:61,type:"multi",section:"多项选择题",title:"关于合伙企业财产，说法正确的有（　）。",options:{A:"仅包括合伙人出资",B:"清算前一般不得请求分割企业财产",C:"转让份额除协议另约定外须经其他合伙人一致同意",D:"以财产份额出质须经其他合伙人一致同意"},answer:["B","C","D"],analysis:"合伙企业财产还包括收益等，A错。"},
+    {id:62,type:"multi",section:"多项选择题",title:"擅自发行股票或公司企业债券罪，可予以处罚有（　）。",options:{A:"处5年以下有期徒刑或拘役，并处或单处非法募集资金1%-5%罚金",B:"退还所募资金并加算利息并处1%-5%罚款",C:"单位犯该罪对单位判处罚金，并对直接责任人员处5年以下有期徒刑或拘役",D:"给予警告并处3万-30万罚款"},answer:["A","C"],analysis:"刑法规定如A、C。"},
+    {id:63,type:"multi",section:"多项选择题",title:"关于上市公司信息披露，说法正确的是（　）。",options:{A:"年度报告应在会计年度结束之日起2个月内报送公告",B:"公开承诺应当披露",C:"境外披露信息应在境内同时披露",D:"董监高无法保证真实准确完整或有异议应陈述理由并披露"},answer:["B","C","D"],analysis:"年度报告为4个月内。"},
+    {id:64,type:"multi",section:"多项选择题",title:"关于融资融券业务决策授权体系，说法错误的有（　）。",options:{A:"由部门负责人确定总规模",B:"业务决策机构确定具体客户授信额度",C:"业务执行部门负责制定操作流程",D:"分支机构负责征信、签约、开户、保证金收取"},answer:["A","B","C"],analysis:"总规模应由董事会确定；授信额度由业务执行部门；流程由业务决策机构。"},
+    {id:65,type:"multi",section:"多项选择题",title:"关于集资诈骗罪，说法正确的有（　）。",options:{A:"主观方面故意，无需非法占有目的",B:"客观方面为使用诈骗手段实施非法集资且数额较大",C:"集资诈骗数额10万元以上应予立案追诉",D:"单位犯本罪对单位判罚金并对直接责任人员处罚"},answer:["B","C","D"],analysis:"集资诈骗罪需以非法占有为目的，A错。"},
+    {id:66,type:"multi",section:"多项选择题",title:"期货公司可以从事的业务包括（　）。",options:{A:"股票期权经纪业务",B:"自营业务",C:"做市业务",D:"与备兑开仓及行权相关的证券现货经纪业务"},answer:["A","D"],analysis:"自营、做市为证券公司业务。"},
+    {id:67,type:"multi",section:"多项选择题",title:"存在（　）的，不得担任独立财务顾问。",options:{A:"持有或共同持有上市公司股份≥5%或派任董事",B:"上市公司持有财务顾问股份≥5%或派任董事",C:"最近2年委托管理/互保或最近1年提供融资服务",D:"董监高/主办人或直系亲属在上市公司任职等影响公正"},answer:["A","B","C","D"],analysis:"均属于不得担任的情形。"},
+    {id:68,type:"multi",section:"多项选择题",title:"下列不能作为普通合伙人的是（　）。",options:{A:"国有企业",B:"国有独资公司",C:"上市公司",D:"公益性事业单位"},answer:["A","B","C","D"],analysis:"上述均不得成为普通合伙人。"},
+    {id:69,type:"multi",section:"多项选择题",title:"关于股份有限公司监事会说法正确的是（　）。",options:{A:"成员不得少于三人",B:"董事不可以兼任监事，高管可以兼任监事",C:"监事会主席和副主席由全体监事过半数选举产生",D:"监事会主席一名，可设立副主席"},answer:["A","C","D"],analysis:"高管不得兼任监事，B错。"},
+    {id:70,type:"multi",section:"多项选择题",title:"根据《证券投资基金法》，公募基金运作方式（　）。",options:{A:"可以采用封闭式",B:"可以采用开放式",C:"可以采用混合式",D:"不得采用封闭式、开放式以外的其他方式"},answer:["A","B"],analysis:"公募基金可封闭或开放（也可依法其他方式，但本题答案为AB）。"},
+    {id:71,type:"multi",section:"多项选择题",title:"证券公司申请保荐业务资格应具备的条件有（　）。",options:{A:"注册资本≥1亿元，净资本≥5000万元",B:"完善治理与内控，风险指标符合规定",C:"保荐代表人不少于5人",D:"最近2年未受重大行政处罚"},answer:["A","B"],analysis:"保荐代表人不少于4人；最近3年未因重大违法受处罚。"},
+    {id:72,type:"multi",section:"多项选择题",title:"普通合伙企业与有限合伙企业区别，正确的有（　）。",options:{A:"普通合伙人无限连带；有限合伙企业普通合伙人承担有限责任",B:"普通合伙2人以上；有限合伙2人以上50人以下",C:"普通合伙合伙人对执行事务同等权利；有限合伙的有限合伙人不得执行事务",D:"普通合伙不得约定全部利润给部分合伙人；有限合伙可将全部利润给部分合伙人但不得约定全部亏损由部分承担"},answer:["B","C","D"],analysis:"有限合伙中普通合伙人仍承担无限责任，A错。"},
+    {id:73,type:"multi",section:"多项选择题",title:"合伙企业按对债务承担责任不同分为（　）。",options:{A:"个人合伙",B:"普通合伙企业",C:"群体合伙企业",D:"有限合伙企业"},answer:["B","D"],analysis:"分为普通合伙与有限合伙。"},
+    {id:74,type:"multi",section:"多项选择题",title:"关于持续符合的风险控制指标标准，正确的是（　）。",options:{A:"净稳定资金率不得低于100%",B:"流动性覆盖率不得低于8%",C:"资本杠杆率不得低于100%",D:"风险覆盖率不得低于100%"},answer:["A","D"],analysis:"流动性覆盖率、资本杠杆率阈值不是题干所述。"},
+    {id:75,type:"multi",section:"多项选择题",title:"《证券公司监督管理条例》客户资产保护措施包括（　）。",options:{A:"客户委托资产交由指定银行或认可托管机构托管",B:"明确客户资产独立性",C:"不得以客户资产向他人提供融资或担保",D:"投资者应使用实名账户交易"},answer:["A","B","C"],analysis:"D属交易所交易规则。"},
+    {id:76,type:"multi",section:"多项选择题",title:"证券投资咨询人员应遵守的准则有（　）。",options:{A:"谨慎、诚实、勤勉尽责",B:"完整客观准确运用信息资料，不断章取义或篡改",C:"不得以虚假信息、传言或内幕信息为依据",D:"制作发布研究报告应向客户进行必要风险提示"},answer:["A","B","C"],analysis:"D更偏向证券分析师/研究报告要求。"},
+    {id:77,type:"multi",section:"多项选择题",title:"关于证券公司股东出资规定，说法错误的有（　）。",options:{A:"股东只能用货币出资",B:"符合条件的债权人可将债权转为股权",C:"货币财产出资总额不得超过注册资本30%",D:"股东可用经营必需的非货币财产出资"},answer:["A","C"],analysis:"可用非货币；非货币出资不得超过30%（不是货币）。"},
+    {id:78,type:"multi",section:"多项选择题",title:"下列行为可构成内幕交易罪的有（　）。",options:{A:"内幕信息公开后交易",B:"过失泄露内幕信息",C:"非法获取内幕信息后买卖证券",D:"利用内幕信息建议他人交易"},answer:["C","D"],analysis:"需在信息未公开前；过失泄露不构成本罪构成要件。"},
+    {id:79,type:"multi",section:"多项选择题",title:"证券自营业务风险控制指标符合规定的有（　）。",options:{A:"自营权益类及其衍生品合计额≤净资本100%",B:"自营权益类及其衍生品合计额≤净资本200%",C:"自营非权益类及其衍生品合计额≤净资本500%",D:"自营非权益类及其衍生品合计额≤净资本1000%"},answer:["A","C"],analysis:"权益类≤100%；非权益类≤500%。"},
+    {id:80,type:"multi",section:"多项选择题",title:"证券的（　）期限最长不得超过90日。",options:{A:"代销",B:"直销",C:"统销",D:"包销"},answer:["A","D"],analysis:"《证券法》：代销、包销期限最长90日。"},
+    {id:81,type:"judge",section:"判断题",title:"证券公司应当在商业银行开立柜台市场自有产品专用账户，用于存放柜台市场客户的非第三方存管资金等，并与其他账户相互隔离。",answer:["错"],analysis:"客户资金应存放于“柜台市场客户资金专用存款账户”；自有产品专用账户在产品登记机构开立。"},
+    {id:82,type:"judge",section:"判断题",title:"以地方政府为直接或间接债务人的基础资产属于资产证券化负面清单，但PPP模式下按公开规则应支付的财政补贴除外。",answer:["对"],analysis:"表述正确。"},
+    {id:83,type:"judge",section:"判断题",title:"操纵证券市场行为给投资者造成损失的，行为人应当依法承担赔偿责任。",answer:["对"],analysis:"表述正确。"},
+    {id:84,type:"judge",section:"判断题",title:"证券公司怀疑客户交易与洗钱相关的，应向中国证监会提交可疑交易报告。",answer:["错"],analysis:"应向中国反洗钱监测分析中心提交可疑交易报告。"},
+    {id:85,type:"judge",section:"判断题",title:"专项计划资产应当由具有相关资格的商业银行、中登公司、具托管资格的证券公司或证监会认可机构托管。",answer:["对"],analysis:"表述正确。"},
+    {id:86,type:"judge",section:"判断题",title:"募集设立股份有限公司时，发起人认购的股份不得少于公司股份总数的25%。",answer:["错"],analysis:"不得少于35%（法律行政法规另有规定的除外）。"},
+    {id:87,type:"judge",section:"判断题",title:"投资者可根据财产、金融资产、投资知识经验、专业能力等分为普通投资者和专业投资者。",answer:["对"],analysis:"表述正确。"},
+    {id:88,type:"judge",section:"判断题",title:"中证协建立人员名单分类机制并公布相关名单，强化分类管理和声誉约束。",answer:["对"],analysis:"表述正确。"},
+    {id:89,type:"judge",section:"判断题",title:"发行人向不特定对象发行的证券应当由证券公司承销。",answer:["错"],analysis:"应当由证券公司承销仅限法律行政法规规定必须承销的情形。"},
+    {id:90,type:"judge",section:"判断题",title:"证券期货经营机构主要负责人是落实廉洁从业管理职责第一责任人。",answer:["对"],analysis:"表述正确。"},
+    {id:91,type:"judge",section:"判断题",title:"偏离5%或以上的产品数超过所发行产品总数的5%，金融机构不得再发行以摊余成本计量金融资产的资管产品。",answer:["对"],analysis:"表述正确。"},
+    {id:92,type:"judge",section:"判断题",title:"个人参与北交所股票交易需20个交易日日均资产不低于50万元且参与证券交易24个月以上。",answer:["对"],analysis:"表述正确。"},
+    {id:93,type:"judge",section:"判断题",title:"中证协建立证券行业执业声誉信息库并实施自律管理。",answer:["对"],analysis:"表述正确。"},
+    {id:94,type:"judge",section:"判断题",title:"期货合约到期时，交易者应通过实物或现金交割了结到期未平仓合约。",answer:["对"],analysis:"表述正确。"},
+    {id:95,type:"judge",section:"判断题",title:"金融债券存续期间，发行人应于每年6月30日前披露年度报告。",answer:["错"],analysis:"应于每年4月30日前披露年度报告。"},
+    {id:96,type:"judge",section:"判断题",title:"保证金是指股票期权买方向卖方支付的用于购买期权合约的资金。",answer:["错"],analysis:"用于购买期权的是“权利金”；保证金用于结算与履约保障。"},
+    {id:97,type:"judge",section:"判断题",title:"发行人董监高及持股超过5%的股东，可视同专业投资者参与其公司债券认购或交易转让。",answer:["对"],analysis:"表述正确。"},
+    {id:98,type:"judge",section:"判断题",title:"只有上市证券公司才需要向社会公众披露经审计年度财务报告等信息。",answer:["错"],analysis:"证券公司应按规定披露，不限于上市公司。"},
+    {id:99,type:"judge",section:"判断题",title:"结算机构按规则收取的结算资金和证券必须存放于专门账户，仅用于清算交收，不得被强制执行。",answer:["对"],analysis:"表述正确。"},
+    {id:100,type:"judge",section:"判断题",title:"部门负责人包括被纳入高级管理人员管理的人员。",answer:["错"],analysis:"部门负责人不包括被纳入高级管理人员管理的人员。"},
+    {id:101,type:"judge",section:"判断题",title:"证券公司可通过任命或委派董事监事等确保对另类子公司管理控制力。",answer:["对"],analysis:"表述正确。"},
+    {id:102,type:"judge",section:"判断题",title:"公司是以营利为目的，股东以投资额为限对公司负责，公司以全部财产对外担责的企业法人。",answer:["对"],analysis:"表述正确。"},
+    {id:103,type:"judge",section:"判断题",title:"行业文化建设专项评价已纳入证券公司分类评价体系。",answer:["对"],analysis:"表述正确。"},
+    {id:104,type:"judge",section:"判断题",title:"基金管理人是基金出资人，也是基金投资回报受益人。",answer:["错"],analysis:"基金份额持有人是出资人和受益人。"},
+    {id:105,type:"judge",section:"判断题",title:"投资者保护机构受50名以上投资者委托，可作为代表人参加诉讼并登记权利人，但明确不愿参加的除外。",answer:["对"],analysis:"表述正确。"},
+    {id:106,type:"judge",section:"判断题",title:"科创板股票涨跌幅限制20%，新股上市后前10个交易日不设涨跌幅限制。",answer:["错"],analysis:"前5个交易日不设涨跌幅限制。"},
+    {id:107,type:"judge",section:"判断题",title:"不具备证券自营资格的证券公司不得从事金融衍生品交易。",answer:["错"],analysis:"可仅以对冲风险为目的从事金融衍生品交易。"},
+    {id:108,type:"judge",section:"判断题",title:"股票质押式回购是资金融入方质押股票等融入资金并约定未来返还资金解除质押的交易。",answer:["对"],analysis:"表述正确。"},
+    {id:109,type:"judge",section:"判断题",title:"证券公司可以代理客户进行期货买卖。",answer:["错"],analysis:"介绍业务不得代理客户期货交易/结算/交割。"},
+    {id:110,type:"judge",section:"判断题",title:"封闭式资产管理产品期限不得低于360天。",answer:["错"],analysis:"封闭式资产管理产品期限不得低于90天。"},
+    {id:111,type:"indefinite",section:"不定项选择题",title:"上市公司收购要约提出的各项收购条件，适用于被收购公司的（　）。",options:{A:"流通股股东",B:"部分股东或者所有股东",C:"所有股东",D:"非流通股股东"},answer:["C"],analysis:"要约收购条件适用于被收购公司的所有股东。"},
+    {id:112,type:"indefinite",section:"不定项选择题",title:"下列关于要约收购的说法，正确的是（　）。",options:{A:"收购期限不得少于30日且不得超过60日",B:"承诺期限内收购人不得撤销要约",C:"变更要约应及时公告载明变更事项",D:"要约收购期限内可以卖出被收购公司股票"},answer:["A","B","C"],analysis:"要约收购期限内不得卖出被收购公司股票。"},
+    {id:113,type:"indefinite",section:"不定项选择题",title:"收购人变更收购要约不得存在（　）情形。",options:{A:"降低收购价格",B:"减少预定收购股份数额",C:"缩短收购期限",D:"提高收购价格"},answer:["A","B","C"],analysis:"不得降低价格、减少数量、缩短期限等。"},
+    {id:114,type:"indefinite",section:"不定项选择题",title:"关于上市公司收购方式说法正确的是（　）。",options:{A:"协议收购达成后3日内向证监会及交易所报告并公告",B:"协议双方可委托登记结算机构保管转让股票并将资金存指定银行",C:"投资者可采取协议收购方式收购上市公司",D:"协议收购达到30%后继续收购可协议收购或要约收购"},answer:["A","B","C"],analysis:"达到30%继续收购一般应依法发出要约（除非免除），D错。"},
+    {id:115,type:"indefinite",section:"不定项选择题",title:"王某以高额回报诱饵非法集资，资金全部投入经营但无力归还，构成（　）。",options:{A:"擅自公开发行证券罪",B:"欺诈公开发行证券罪",C:"非法吸收公众存款罪",D:"集资诈骗罪"},answer:["C"],analysis:"无非法占有目的，构成非法吸收公众存款罪。"},
+    {id:116,type:"indefinite",section:"不定项选择题",title:"若王某取得资金后大部分用于挥霍致大量无法返还，构成（　）。",options:{A:"擅自公开发行证券罪",B:"欺诈公开发行证券罪",C:"非法吸收公众存款罪",D:"集资诈骗罪"},answer:["D"],analysis:"以非法占有为目的使用诈骗方法非法集资，构成集资诈骗罪。"},
+    {id:117,type:"indefinite",section:"不定项选择题",title:"关于非法吸收公众存款罪的犯罪构成，说法正确的是（　）。",options:{A:"主体只能是单位",B:"主观方面为故意或过失",C:"客体是公众合法财产",D:"客观方面为非法吸收或变相吸收公众存款行为"},answer:["D"],analysis:"主体包括自然人和单位；主观为故意；客体为金融管理秩序。"},
+    {id:118,type:"indefinite",section:"不定项选择题",title:"非法吸收公众存款涉嫌下列情形之一应立案追诉（　）。",options:{A:"数额在100万元以上",B:"对象150人以上",C:"造成直接经济损失50万元以上",D:"造成直接经济损失40万元以上"},answer:["A","B","C"],analysis:"立案标准：100万以上/150人以上/损失50万以上等。"},
+    {id:119,type:"indefinite",section:"不定项选择题",title:"基金经理泄露未公开信息并共同交易的行为构成（　）。",options:{A:"利用未公开信息交易罪",B:"诱骗投资者买卖证券期货合约罪",C:"违规披露信息罪",D:"操纵证券市场罪"},answer:["A"],analysis:"属于利用未公开信息交易罪。"},
+    {id:120,type:"indefinite",section:"不定项选择题",title:"关于利用未公开信息交易罪，说法正确的是（　）。",options:{A:"避免损失10万元以上应立案追诉",B:"3年内1次交易应立案追诉",C:"犯罪主体是特殊主体",D:"犯罪主体是个人，机构不构成犯罪主体"},answer:["C","D"],analysis:"立案追诉一般为获利或避免损失100万元以上，或2年内3次以上等；主体为特殊主体且仅自然人。"},
+  ];
+  return qs;
+})();
+// --- 从上一版粘贴：结束 ---
+
+// ======================= 引擎状态 =======================
+const state = {
+  // 题目集合（可切换为抽题/错题）
+  activeIds: EXAM.questions.map(q=>q.id),
+  cur: 0,
+  picks: new Map(),      // id -> Set(keys)
+  submitted: new Map(),  // id -> {correct:boolean, user:Array, answer:Array}
+  lastWrongIds: [],      // 最近一次交卷的错题
+  strict: false,
+
+  // timer
+  started: false,
+  paused: false,
+  startAt: 0,
+  pauseAt: 0,
+  elapsedMs: 0,
+  countdownTotalMs: 0,
+  timerHandle: null,
+
+  // config
+  allowPrevInStrict: true, // 如需严格模式禁止回看，将此改为 false
+};
+
+const $ = sel => document.querySelector(sel);
+const dlg = $("#dlg");
+const finalDlg = $("#finalDlg");
+
+function qTypeLabel(type){
+  if(type==="single") return "单选题";
+  if(type==="multi") return "多选题";
+  if(type==="judge") return "判断题";
+  if(type==="indefinite") return "不定项选择题";
+  return type;
+}
+function normalizeAnswers(arr){
+  return [...arr].map(x=>String(x).trim()).filter(Boolean).sort();
+}
+function isCorrect(q, userSet){
+  const user = normalizeAnswers(userSet ? [...userSet] : []);
+  const ans = normalizeAnswers(q.answer);
+  if(user.length !== ans.length) return false;
+  for(let i=0;i<ans.length;i++) if(user[i]!==ans[i]) return false;
+  return true;
+}
+function getActiveQuestions(){
+  const idSet = new Set(state.activeIds);
+  return EXAM.questions.filter(q=>idSet.has(q.id));
+}
+function getCurQuestion(){
+  const qs = getActiveQuestions();
+  return qs[state.cur];
+}
+function fmtTime(ms){
+  ms = Math.max(0, ms|0);
+  const s = Math.floor(ms/1000);
+  const hh = String(Math.floor(s/3600)).padStart(2,"0");
+  const mm = String(Math.floor((s%3600)/60)).padStart(2,"0");
+  const ss = String(s%60).padStart(2,"0");
+  return `${hh}:${mm}:${ss}`;
+}
+function updateHeaderBadges(){
+  $("#examTitle").textContent = EXAM.title + "（模拟）";
+  $("#strictBadge").textContent = state.strict ? "开" : "关";
+  $("#modeBadge").textContent =
+    state.activeIds.length === EXAM.questions.length ? "全量题库" :
+    (state.activeIds.length === state.lastWrongIds.length && state.lastWrongIds.length>0 ? "错题模式" : "抽题模式");
+
+  const qs = getActiveQuestions();
+  $("#progressBadge").textContent = `${Math.min(state.cur+1, qs.length)} / ${qs.length}`;
+
+  if(!state.started){
+    $("#timerBadge").textContent = "未开始";
+  }else{
+    if(state.countdownTotalMs>0){
+      const left = state.countdownTotalMs - state.elapsedMs;
+      $("#timerBadge").textContent = `剩余 ${fmtTime(left)}（用时 ${fmtTime(state.elapsedMs)}）`;
+    }else{
+      $("#timerBadge").textContent = `用时 ${fmtTime(state.elapsedMs)}`;
+    }
+  }
+}
+
+function showDialog(title, html){
+  $("#dlgTitle").textContent = title;
+  $("#dlgBody").innerHTML = html;
+  dlg.showModal();
+}
+$("#dlgClose").onclick = ()=> dlg.close();
+$("#finalClose").onclick = ()=> finalDlg.close();
+
+// ======================= 渲染 =======================
+function renderGrid(){
+  const grid = $("#grid");
+  grid.innerHTML = "";
+  const qs = getActiveQuestions();
+  qs.forEach((q, idx)=>{
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.textContent = q.id;
+
+    const pick = state.picks.get(q.id);
+    const sub = state.submitted.get(q.id);
+
+    if(idx===state.cur) cell.classList.add("cur");
+    if(sub){
+      cell.classList.add(sub.correct ? "done" : "wrong");
+    }else if(pick && pick.size){
+      cell.classList.add("part");
+    }
+    cell.onclick = ()=>{
+      // 严格模式可限制回看（这里只限制“跳题卡随意跳”，但仍可允许上一题/下一题）
+      if(state.strict && state.started){
+        // 若不允许回看：只能去当前题或下一题
+        if(!state.allowPrevInStrict){
+          if(idx > state.cur) { state.cur = idx; render(); }
+          return;
+        }
+      }
+      state.cur = idx; render();
+    };
+    grid.appendChild(cell);
+  });
+}
+
+function renderStats(){
+  const qs = getActiveQuestions();
+  let picked=0, submitted=0, wrong=0;
+  qs.forEach(q=>{
+    const p = state.picks.get(q.id);
+    if(p && p.size) picked++;
+    const s = state.submitted.get(q.id);
+    if(s){ submitted++; if(!s.correct) wrong++; }
+  });
+  $("#pickedCount").textContent = picked;
+  $("#submittedCount").textContent = submitted;
+  $("#wrongCount").textContent = wrong;
+}
+
+function renderQuestion(){
+  const qs = getActiveQuestions();
+  if(qs.length===0){
+    $("#qTitle").textContent = "当前没有题目。";
+    $("#options").innerHTML = "";
+    $("#qIndexBadge").textContent = `第 - 题`;
+    $("#qTypeBadge").textContent = `题型：-`;
+    $("#qStatusBadge").textContent = `状态：-`;
+    $("#ruleHint").textContent = "";
+    return;
+  }
+
+  const q = getCurQuestion();
+  updateHeaderBadges();
+
+  $("#qIndexBadge").textContent = `第 ${q.id} / ${qs.length} 题`;
+  $("#qTypeBadge").textContent = `题型：${qTypeLabel(q.type)}（${q.section}）`;
+
+  const pick = state.picks.get(q.id);
+  const sub = state.submitted.get(q.id);
+
+  $("#qStatusBadge").textContent = sub
+    ? (sub.correct ? "状态：已判分（正确）" : "状态：已判分（错误）")
+    : (pick && pick.size ? "状态：已选择（未判分）" : "状态：未作答");
+
+  // 严格模式说明
+  $("#ruleHint").textContent = state.strict
+    ? "严格模式：不提供“提交本题”的即时判分与解析；仅交卷后统一判分。"
+    : "普通模式：可“提交本题”即时判分；答错会弹出正确答案与解析。";
+
+  $("#qTitle").textContent = `${q.id}. ${q.title}`;
+  $("#qStem").textContent = "";
+
+  const optionsWrap = $("#options");
+  optionsWrap.innerHTML = "";
+
+  let options = q.options;
+  if(q.type==="judge") options = {"对":"对","错":"错"};
+
+  const inputType = (q.type==="single" || q.type==="judge") ? "radio" : "checkbox";
+  const name = `q_${q.id}`;
+
+  Object.entries(options).forEach(([key, txt])=>{
+    const label = document.createElement("label");
+    label.className = "opt";
+
+    const input = document.createElement("input");
+    input.type = inputType;
+    input.name = name;
+    input.value = key;
+
+    const curPick = state.picks.get(q.id);
+    input.checked = curPick ? curPick.has(key) : false;
+
+    input.onchange = ()=>{
+      if(q.type==="single" || q.type==="judge"){
+        state.picks.set(q.id, new Set([key]));
+      }else{
+        const s = new Set(state.picks.get(q.id) || []);
+        if(input.checked) s.add(key); else s.delete(key);
+        state.picks.set(q.id, s);
+      }
+      renderStats();
+      renderGrid();
+      $("#saveHint").textContent = `已保存：${normalizeAnswers(state.picks.get(q.id) ? [...state.picks.get(q.id)] : []).join(",") || "（无）"}`;
+    };
+
+    // 严格模式下已开始考试，可选择“锁定已判分题”（这里不锁定，你需要可加）
+    if(state.started && state.strict){
+      // 不禁用选择，允许修改直到交卷
+    }
+
+    const div = document.createElement("div");
+    div.className = "txt";
+    div.innerHTML = (q.type==="judge")
+      ? `<b>${key}</b>`
+      : `<b>${key}</b>. ${txt}`;
+
+    label.appendChild(input);
+    label.appendChild(div);
+    optionsWrap.appendChild(label);
+  });
+
+  // 导航按钮禁用逻辑
+  $("#prevBtn").disabled = state.cur===0 || (state.strict && state.started && !state.allowPrevInStrict);
+  $("#nextBtn").disabled = state.cur===qs.length-1;
+
+  // 严格模式：禁用“提交本题”
+  $("#submitBtn").disabled = state.strict && state.started;
+}
+
+function render(){
+  renderQuestion();
+  renderGrid();
+  renderStats();
+  updateHeaderBadges();
+}
+
+// ======================= 计时器 =======================
+function timerTick(){
+  if(!state.started || state.paused) return;
+
+  const now = Date.now();
+  state.elapsedMs = now - state.startAt;
+
+  // 倒计时到点自动交卷
+  if(state.countdownTotalMs>0){
+    const left = state.countdownTotalMs - state.elapsedMs;
+    if(left <= 0){
+      state.elapsedMs = state.countdownTotalMs;
+      updateHeaderBadges();
+      // 自动交卷
+      doFinish(true);
+      return;
+    }
+  }
+  updateHeaderBadges();
+}
+
+function startExam(){
+  if(state.started) return;
+  state.started = true;
+  state.paused = false;
+
+  const min = parseInt($("#countdownMin").value || "0", 10);
+  state.countdownTotalMs = (isNaN(min) || min<=0) ? 0 : min*60*1000;
+
+  state.startAt = Date.now();
+  state.elapsedMs = 0;
+
+  $("#startBtn").disabled = true;
+  $("#pauseBtn").disabled = false;
+  $("#resumeBtn").disabled = true;
+
+  state.timerHandle = setInterval(timerTick, 300);
+  render();
+}
+
+function pauseExam(){
+  if(!state.started || state.paused) return;
+  state.paused = true;
+  state.pauseAt = Date.now();
+  clearInterval(state.timerHandle);
+  state.timerHandle = null;
+
+  $("#pauseBtn").disabled = true;
+  $("#resumeBtn").disabled = false;
+  updateHeaderBadges();
+}
+
+function resumeExam(){
+  if(!state.started || !state.paused) return;
+  state.paused = false;
+  // 调整 startAt，使得 elapsed 连续
+  const pausedDur = Date.now() - state.pauseAt;
+  state.startAt += pausedDur;
+
+  $("#pauseBtn").disabled = false;
+  $("#resumeBtn").disabled = true;
+
+  state.timerHandle = setInterval(timerTick, 300);
+  updateHeaderBadges();
+}
+
+$("#startBtn").onclick = startExam;
+$("#pauseBtn").onclick = pauseExam;
+$("#resumeBtn").onclick = resumeExam;
+
+// ======================= 模式切换：严格 =======================
+$("#strictToggle").onchange = (e)=>{
+  state.strict = !!e.target.checked;
+  render();
+};
+
+// ======================= 提交本题（普通模式） =======================
+$("#submitBtn").onclick = ()=>{
+  const q = getCurQuestion();
+  const userSet = state.picks.get(q.id) || new Set();
+  if(!userSet.size){
+    showDialog("未作答", `<div class="muted">请先选择答案再提交本题。</div>`);
+    return;
+  }
+  const correct = isCorrect(q, userSet);
+  state.submitted.set(q.id, {correct, user: normalizeAnswers([...userSet]), answer: normalizeAnswers(q.answer)});
+  render();
+
+  if(!correct){
+    showDialog(
+      `第 ${q.id} 题答错了`,
+      `<div><b>你的答案：</b>${normalizeAnswers([...userSet]).join(", ") || "（无）"}</div>
+       <div style="margin-top:6px"><b>正确答案：</b><span style="color:var(--good)">${normalizeAnswers(q.answer).join(", ")}</span></div>
+       <div style="margin-top:10px"><b>解析：</b></div>
+       <pre>${q.analysis || "（暂无解析）"}</pre>`
+    );
+  }else{
+    showDialog(`第 ${q.id} 题正确`, `<div style="color:var(--good)">回答正确。</div>`);
+  }
+};
+
+// ======================= 自动提交所有题目 + 交卷统计 =======================
+function doFinish(fromAuto=false){
+  const qs = getActiveQuestions();
+
+  // 自动提交所有题（未作答也记录为错误：user=[]）
+  qs.forEach(q=>{
+    const userSet = state.picks.get(q.id) || new Set();
+    const correct = userSet.size ? isCorrect(q, userSet) : false;
+    state.submitted.set(q.id, {
+      correct,
+      user: normalizeAnswers([...userSet]),
+      answer: normalizeAnswers(q.answer)
+    });
+  });
+
+  // 统计
+  const wrongIds = [];
+  const wrongDetails = [];
+  qs.forEach(q=>{
+    const s = state.submitted.get(q.id);
+    if(s && !s.correct){
+      wrongIds.push(q.id);
+      wrongDetails.push({id:q.id, title:q.title, user:s.user, answer:s.answer, analysis:q.analysis});
+    }
+  });
+  state.lastWrongIds = wrongIds.slice();
+
+  render();
+
+  // 弹出结果（严格/普通都显示结果与解析）
+  const total = qs.length;
+  const wrongCount = wrongIds.length;
+  const rightCount = total - wrongCount;
+
+  const html = `
+    <div class="meta" style="margin-bottom:10px">
+      <span class="badge">题目数：<strong>${total}</strong></span>
+      <span class="badge">正确：<strong style="color:var(--good)">${rightCount}</strong></span>
+      <span class="badge">错误：<strong style="color:var(--bad)">${wrongCount}</strong></span>
+      <span class="badge">用时：<strong>${fmtTime(state.elapsedMs)}</strong></span>
+      ${fromAuto ? `<span class="badge" style="border-color:rgba(225,29,72,.25);color:var(--bad)">已自动交卷</span>` : ``}
+    </div>
+    <div><b>错题题号：</b>${wrongIds.length ? wrongIds.join("、") : "<span style='color:var(--good)'>无</span>"}</div>
+    <div class="tiny" style="margin-top:8px">提示：可以点击“只做错题”进入错题练习。</div>
+    <div style="margin-top:12px"><b>错题明细（含解析）：</b></div>
+    ${
+      wrongDetails.length
+      ? wrongDetails.map(d=>`
+          <div style="margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:rgba(17,24,39,.02)">
+            <div style="font-weight:700">${d.id}. ${d.title}</div>
+            <div class="tiny" style="margin-top:6px"><b>你的答案：</b>${(d.user||[]).join(", ") || "（未作答）"}</div>
+            <div class="tiny"><b>正确答案：</b><span style="color:var(--good)">${(d.answer||[]).join(", ")}</span></div>
+            <pre>${d.analysis || "（暂无解析）"}</pre>
+          </div>
+        `).join("")
+      : `<div style="margin-top:10px;color:var(--good)">全部正确。</div>`
+    }
+  `;
+  $("#finalBody").innerHTML = html;
+  finalDlg.showModal();
+
+  // 交卷后：停止计时
+  if(state.timerHandle){ clearInterval(state.timerHandle); state.timerHandle=null; }
+  state.paused = false;
+  $("#pauseBtn").disabled = true;
+  $("#resumeBtn").disabled = true;
+  // 允许重新开始：如果你希望交卷后不能再开始，可把这里改掉
+  $("#startBtn").disabled = true; // 交卷后不再允许开始（避免重复计时混乱）
+  updateHeaderBadges();
+}
+
+$("#finishBtn").onclick = ()=>{
+  if(!confirm("确定交卷？将自动提交所有题目（未作答按错题计）。")) return;
+  // 严格模式一般要求已开始才能交卷；这里不强制
+  doFinish(false);
+};
+
+// ======================= 导航 =======================
+$("#prevBtn").onclick = ()=>{
+  if(state.cur>0){
+    if(state.strict && state.started && !state.allowPrevInStrict) return;
+    state.cur--; render();
+  }
+};
+$("#nextBtn").onclick = ()=>{
+  const qs = getActiveQuestions();
+  if(state.cur<qs.length-1){ state.cur++; render(); }
+};
+
+// ======================= 清空重做 =======================
+$("#resetBtn").onclick = ()=>{
+  if(!confirm("确定清空当前模式下的作答与判分记录？")) return;
+  state.cur = 0;
+  state.picks.clear();
+  state.submitted.clear();
+  state.lastWrongIds = state.lastWrongIds; // 保留上次错题用于“只做错题”
+
+  // 重置计时器
+  state.started = false;
+  state.paused = false;
+  state.startAt = 0;
+  state.elapsedMs = 0;
+  state.countdownTotalMs = 0;
+  if(state.timerHandle){ clearInterval(state.timerHandle); state.timerHandle=null; }
+  $("#startBtn").disabled = false;
+  $("#pauseBtn").disabled = true;
+  $("#resumeBtn").disabled = true;
+
+  render();
+};
+
+// ======================= 只做错题 =======================
+$("#wrongOnlyBtn").onclick = ()=>{
+  if(!state.lastWrongIds || state.lastWrongIds.length===0){
+    showDialog("没有错题", `<div class="muted">请先交卷一次，系统才知道你的错题集合。</div>`);
+    return;
+  }
+  state.activeIds = state.lastWrongIds.slice();
+  state.cur = 0;
+  // 进入错题模式：建议清空作答/判分（保留也行，这里清空以便重练）
+  state.picks.clear();
+  state.submitted.clear();
+
+  // 重置计时按钮（错题练习一般不需要严格计时；你也可以照样开始）
+  state.started = false;
+  state.paused = false;
+  state.elapsedMs = 0;
+  if(state.timerHandle){ clearInterval(state.timerHandle); state.timerHandle=null; }
+  $("#startBtn").disabled = false;
+  $("#pauseBtn").disabled = true;
+  $("#resumeBtn").disabled = true;
+
+  render();
+};
+
+$("#allModeBtn").onclick = ()=>{
+  state.activeIds = EXAM.questions.map(q=>q.id);
+  state.cur = 0;
+  state.picks.clear();
+  state.submitted.clear();
+
+  state.started = false;
+  state.paused = false;
+  state.elapsedMs = 0;
+  if(state.timerHandle){ clearInterval(state.timerHandle); state.timerHandle=null; }
+  $("#startBtn").disabled = false;
+  $("#pauseBtn").disabled = true;
+  $("#resumeBtn").disabled = true;
+
+  render();
+};
+
+// ======================= 随机抽题 =======================
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function sampleBalanced(n){
+  const all = EXAM.questions.slice();
+  const groups = new Map();
+  all.forEach(q=>{
+    const k = q.type;
+    if(!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(q);
+  });
+  // 按题型在全题中的占比分配
+  const total = all.length;
+  const types = [...groups.keys()];
+  const alloc = new Map();
+  let sum = 0;
+  types.forEach(t=>{
+    const cnt = groups.get(t).length;
+    const k = Math.floor(n * (cnt/total));
+    alloc.set(t, k);
+    sum += k;
+  });
+  // 余量补齐：按剩余最多的类型补
+  let remain = n - sum;
+  const sortedBySize = types.slice().sort((a,b)=>groups.get(b).length - groups.get(a).length);
+  let idx=0;
+  while(remain>0){
+    alloc.set(sortedBySize[idx%sortedBySize.length], (alloc.get(sortedBySize[idx%sortedBySize.length])||0) + 1);
+    remain--; idx++;
+  }
+  // 实际抽取
+  const picked = [];
+  types.forEach(t=>{
+    const k = alloc.get(t)||0;
+    if(k<=0) return;
+    const pool = shuffle(groups.get(t));
+    picked.push(...pool.slice(0, Math.min(k, pool.length)));
+  });
+  return shuffle(picked).slice(0,n).map(q=>q.id);
+}
+
+$("#sampleBtn").onclick = ()=>{
+  const n = parseInt($("#sampleN").value || "0", 10);
+  if(!n || n<=0){
+    showDialog("参数错误", `<div class="muted">请输入有效抽题数量。</div>`);
+    return;
+  }
+  const max = EXAM.questions.length;
+  const N = Math.min(n, max);
+
+  const balanced = $("#balancedSample").checked;
+  const ids = balanced
+    ? sampleBalanced(N)
+    : shuffle(EXAM.questions).slice(0,N).map(q=>q.id);
+
+  state.activeIds = ids;
+  state.cur = 0;
+  state.picks.clear();
+  state.submitted.clear();
+
+  // 抽题后，允许重新开始计时
+  state.started = false;
+  state.paused = false;
+  state.elapsedMs = 0;
+  if(state.timerHandle){ clearInterval(state.timerHandle); state.timerHandle=null; }
+  $("#startBtn").disabled = false;
+  $("#pauseBtn").disabled = true;
+  $("#resumeBtn").disabled = true;
+
+  render();
+};
+
+// ======================= 初始化 =======================
+render();
+</script>
+</body>
+</html>
